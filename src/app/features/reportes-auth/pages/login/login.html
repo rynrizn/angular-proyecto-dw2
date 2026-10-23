@@ -4,13 +4,36 @@
         <h1 class="text-3xl font-bold text-center text-slate-500 mb-2">ProTrack</h1>
         <h3 class="text-xl font-semibold text-center">Bienvenido de nuevo</h3>
         <p class="text-sm text-center mb-8"> Ingresa tus credenciales para acceder</p>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <label class="text-sm font-medium block mb-1" for="">Usuario:</label>
+            <input formControlName="nombreUsuario"
+                class="border rounded-md w-full p-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
+                [ngClass]="{'border-slate-600 mb-4': !loginForm.get('nombreUsuario')?.touched, 
+                            'border-red-600 focus:ring-red-400 mb-1': loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched}"
+                type="text" placeholder="Ej: admin">
 
-        <label class="text-sm font-medium block mb-1" for="">Correo electronico:</label>
-        <input class="border border-slate-300 rounded-md w-full p-3 mb-4 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors" type="email" name="" id="" placeholder="admin@protrack.com">
+            @if(loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched){
+                <div class="text-xs text-red-600 mt-0 mb-4">
+                    @if (loginForm.get('nombreUsuario')?.errors?.['required']) {<p>El usuario es obligatorio</p>}
+                </div>
+            }
 
-        <label class="text-sm font-medium block mb-1" for="">Contraseña:</label>
-        <input class="border border-slate-300 rounded-md w-full p-3 focus:outline-none focus:border-slate-700 focus:ring-1 focus:ring-blue-500 transition-colors" type="password" name="" id="" placeholder="******">
-    
-        <button class="border border-slate-300 rounded-xl w-full mt-5 bg-slate-500 text-white p-2 hover:bg-indigo-400 transition-colors">Ingresar</button>
+
+            <label class="text-sm font-medium block mb-1 mt-4" for="">Contraseña:</label>
+            <input formControlName="contraseña"
+                class="border rounded-md w-full p-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
+                [ngClass]="{'border-slate-600': !loginForm.get('contraseña')?.touched, 
+                            'border-red-600 focus:ring-red-400 mb-1': loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched
+                }" type="password" placeholder="******">
+            
+            @if(loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched){
+                <div class="text-xs text-red-600 mt-0">
+                    @if(loginForm.get('contraseña')?.errors?.['required']){<p>La contraseña es obligatorio</p>}
+                    @else {<p>El tamaño minimo es de 6 caracteres</p>}
+                </div>
+            }
+            <button
+                class="border border-slate-300 rounded-xl w-full mt-6 bg-slate-500 text-white p-2 hover:bg-indigo-400 transition-colors">Ingresar</button>
+        </form>
     </div>
 </div>
