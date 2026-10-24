@@ -1,8 +1,21 @@
 <section class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-bold text-slate-800">Proveedores</h1>
-    <p class="text-slate-500">Directorio de empresas que abastecen insumos.</p>
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Proveedores</h1>
+      <p class="text-slate-500">Directorio de empresas que abastecen insumos.</p>
+    </div>
+    <button
+      type="button"
+      (click)="abrirNuevo()"
+      class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+    >
+      + Nuevo proveedor
+    </button>
   </div>
+
+  @if (mensaje()) {
+    <p class="px-4 py-3 rounded-lg bg-green-100 text-green-800">{{ mensaje() }}</p>
+  }
 
   <input
     #buscador
@@ -21,6 +34,7 @@
             <th class="px-4 py-3 font-semibold">Razón social</th>
             <th class="px-4 py-3 font-semibold">Contacto</th>
             <th class="px-4 py-3 font-semibold">Teléfono</th>
+            <th class="px-4 py-3 font-semibold">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +44,15 @@
               <td class="px-4 py-3 font-medium">{{ proveedor.nombreEmpresa }}</td>
               <td class="px-4 py-3">{{ proveedor.contacto }}</td>
               <td class="px-4 py-3">{{ proveedor.telefono }}</td>
+              <td class="px-4 py-3">
+                <button
+                  type="button"
+                  (click)="abrirEditar(proveedor)"
+                  class="text-indigo-600 hover:underline"
+                >
+                  Editar
+                </button>
+              </td>
             </tr>
           }
         </tbody>
@@ -37,5 +60,13 @@
     </div>
   } @else {
     <p class="text-slate-500">No se encontraron proveedores con ese criterio.</p>
+  }
+
+  @if (modalAbierto()) {
+    <app-proveedor-modal
+      [proveedor]="proveedorEnEdicion()"
+      (guardado)="guardarProveedor($event)"
+      (cancelado)="cerrarModal()"
+    />
   }
 </section>

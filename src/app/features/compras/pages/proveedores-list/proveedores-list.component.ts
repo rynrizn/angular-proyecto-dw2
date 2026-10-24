@@ -1,9 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { CreateProveedorDto, Proveedor } from '../../../../models';
+import { ProveedorModalComponent } from '../../components/proveedor-modal/proveedor-modal.component';
 import { ComprasService } from '../../services/compras.service';
 
 @Component({
   selector: 'app-proveedores-list',
-  imports: [],
+  imports: [ProveedorModalComponent],
   templateUrl: './proveedores-list.component.html',
   styleUrl: './proveedores-list.component.css'
 })
@@ -12,6 +14,12 @@ export class ProveedoresListComponent {
 
   protected terminoBusqueda = signal('');
 
+  protected modalAbierto = signal(false);
+  protected proveedorEnEdicion = signal<Proveedor | null>(null);
+
+  protected mensaje = signal('');
+
+  // Lista que se muestra: se recalcula sola cuando cambian los proveedores o el texto
   protected proveedoresFiltrados = computed(() => {
     const termino = this.terminoBusqueda().trim().toLowerCase();
     const todos = this.comprasService.proveedores();
@@ -29,5 +37,33 @@ export class ProveedoresListComponent {
 
   protected buscar(texto: string): void {
     this.terminoBusqueda.set(texto);
+  }
+
+  protected abrirNuevo(): void {
+    this.proveedorEnEdicion.set(null);
+    this.modalAbierto.set(true);
+  }
+
+  protected abrirEditar(proveedor: Proveedor): void {
+    this.proveedorEnEdicion.set(proveedor);
+    this.modalAbierto.set(true);
+  }
+
+  protected cerrarModal(): void {
+    this.modalAbierto.set(false);
+  }
+
+  protected guardarProveedor(datos: CreateProveedorDto): void {
+    const enEdicion = this.proveedorEnEdicion();
+
+    if (enEdicion) {
+      this.comprasService.actualizarProveedor(enEdicion.id, datos);
+      this.mensaje.set('Proveedor actualizado correctamente.');
+    } else {
+      this.comprasService.crearProveedor(datos);
+      this.mensaje.set('Proveedor registrado correctamente.');
+    }
+
+    this.modalAbierto.set(false);
   }
 }

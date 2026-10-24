@@ -1,0 +1,81 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+  <div
+    class="w-full max-w-md bg-white rounded-lg shadow-xl p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal"
+  >
+    <h2 id="titulo-modal" class="text-xl font-bold text-slate-800 mb-4">
+      {{ proveedor() ? 'Editar proveedor' : 'Nuevo proveedor' }}
+    </h2>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="space-y-4">
+      <div>
+        <label for="nombreEmpresa" class="block text-sm font-medium text-slate-700 mb-1">Razón social</label>
+        <input
+          id="nombreEmpresa"
+          type="text"
+          formControlName="nombreEmpresa"
+          class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+        @if (mostrarError('nombreEmpresa', 'required')) {
+          <p class="text-sm text-red-600 mt-1">La razón social es obligatoria.</p>
+        }
+        @if (mostrarError('nombreEmpresa', 'minlength')) {
+          <p class="text-sm text-red-600 mt-1">Debe tener al menos 3 caracteres.</p>
+        }
+        @if (mostrarError('nombreEmpresa', 'maxlength')) {
+          <p class="text-sm text-red-600 mt-1">No puede superar los 150 caracteres.</p>
+        }
+      </div>
+
+      <div>
+        <label for="contacto" class="block text-sm font-medium text-slate-700 mb-1">Contacto</label>
+        <input
+          id="contacto"
+          type="text"
+          formControlName="contacto"
+          class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+        @if (mostrarError('contacto', 'required')) {
+          <p class="text-sm text-red-600 mt-1">El contacto es obligatorio.</p>
+        }
+        @if (mostrarError('contacto', 'maxlength')) {
+          <p class="text-sm text-red-600 mt-1">No puede superar los 100 caracteres.</p>
+        }
+      </div>
+
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-slate-700 mb-1">Teléfono</label>
+        <input
+          id="telefono"
+          type="text"
+          formControlName="telefono"
+          class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+        @if (mostrarError('telefono', 'required')) {
+          <p class="text-sm text-red-600 mt-1">El teléfono es obligatorio.</p>
+        }
+        @if (mostrarError('telefono', 'pattern')) {
+          <p class="text-sm text-red-600 mt-1">Solo números, entre 7 y 15 dígitos.</p>
+        }
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
