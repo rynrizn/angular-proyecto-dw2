@@ -1,9 +1,9 @@
-<div class="bg-slate-800 text-white min-h-screen p-3">
-  <h2 class="text-xl font-bold mb-4">Inventario</h2>
-  <ul>
+<div class="bg-slate-800 text-white p-3 md:min-h-screen">
+  <h2 class="text-xl font-bold mb-2 md:mb-4">Inventario</h2>
+  <ul class="flex flex-wrap gap-1 md:block">
     @for (item of menu; track item.ruta) {
-      <li class="mb-2">
-        <a [routerLink]="item.ruta" class="block p-2 rounded-xl hover:bg-slate-600">{{ item.nombre }}</a>
+      <li class="md:mb-2">
+        <a [routerLink]="item.ruta" class="block p-2 rounded-xl text-sm md:text-base hover:bg-slate-600">{{ item.nombre }}</a>
       </li>
     }
   </ul>

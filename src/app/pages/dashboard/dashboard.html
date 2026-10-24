@@ -2,7 +2,7 @@
   <p class="text-xl uppercase font-bold">Resumen general</p>
   <div class="flex flex-wrap">
     @for (t of dashboardService.tarjetas(); track t.titulo) {
-      <app-item-tarjeta [tarjeta]="t" />
+      <app-item-tarjeta class="w-full sm:w-56" [tarjeta]="t" />
     }
   </div>
 </div>
