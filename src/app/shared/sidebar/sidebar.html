@@ -1,0 +1,10 @@
+<div class="bg-slate-800 text-white min-h-screen p-3">
+  <h2 class="text-xl font-bold mb-4">Inventario</h2>
+  <ul>
+    @for (item of menu; track item.ruta) {
+      <li class="mb-2">
+        <a [routerLink]="item.ruta" class="block p-2 rounded-xl hover:bg-slate-600">{{ item.nombre }}</a>
+      </li>
+    }
+  </ul>
+</div>

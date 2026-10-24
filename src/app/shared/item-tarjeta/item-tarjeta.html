@@ -1,0 +1,6 @@
+<div class="w-56 m-2 rounded-xl border-2 p-3"
+    [ngClass]="{'bg-red-200 border-red-500': tarjeta().alerta,
+                'bg-green-200 border-green-500': !tarjeta().alerta}">
+  <p class="font-bold uppercase">{{ tarjeta().titulo }}</p>
+  <p class="text-3xl">{{ tarjeta().valor }}</p>
+</div>
