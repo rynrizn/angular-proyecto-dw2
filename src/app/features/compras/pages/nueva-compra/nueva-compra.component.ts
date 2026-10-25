@@ -5,11 +5,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { map } from 'rxjs';
 import { INSUMOS_TEMPORALES } from '../../data/insumos-temporales';
 import { ComprasService } from '../../services/compras.service';
+import { RouterLink } from '@angular/router';
 
 // TEMPORAL: el usuario real vendrá del AuthService del Integrante 5
 const USUARIO_TEMPORAL_ID = 1;
 
-// Fecha de hoy como "2026-10-24" (formato del campo de fecha)
 function fechaDeHoy(): string {
   const hoy = new Date();
   const mes = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -17,14 +17,13 @@ function fechaDeHoy(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`;
 }
 
-// Redondea a 2 decimales para evitar resultados como 0.30000000000000004
 function redondear(valor: number): number {
   return Math.round(valor * 100) / 100;
 }
 
 @Component({
   selector: 'app-nueva-compra',
-  imports: [ReactiveFormsModule, DecimalPipe],
+    imports: [ReactiveFormsModule, DecimalPipe, RouterLink],
   templateUrl: './nueva-compra.component.html',
   styleUrl: './nueva-compra.component.css'
 })
@@ -118,10 +117,10 @@ export class NuevaCompraComponent {
     this.limpiarFormulario();
   }
 
-  private limpiarFormulario(): void {
-    this.lineas.clear();
-    this.lineas.push(this.crearLinea());
-    this.formulario.patchValue({ proveedorId: 0, fecha: fechaDeHoy() });
-    this.formulario.markAsUntouched();
+    private limpiarFormulario(): void {
+    while (this.lineas.length > 1) {
+      this.lineas.removeAt(1);
+    }
+    this.formulario.reset({ proveedorId: 0, fecha: fechaDeHoy() });
   }
 }
