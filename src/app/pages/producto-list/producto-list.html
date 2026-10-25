@@ -1,0 +1,61 @@
+<div class="page-header">
+  <h2>Productos e inventario</h2>
+  <a routerLink="/productos/nuevo" class="btn btn-primary">+ Nuevo producto</a>
+</div>
+
+<div class="filtros"><input
+    placeholder="Buscar por codigo o nombre"
+    [ngModel]="busqueda()"
+    (ngModelChange)="busqueda.set($event)"
+  />
+  <select [ngModel]="categoria()" (ngModelChange)="categoria.set($event)">
+    <option value="">Todas las categorías</option>
+    @for (c of categorias(); track c) {
+      <option [value]="c">{{ c }}</option>
+    }
+  </select>
+</div>
+
+<div class="tabla-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Categoria</th>
+        <th>Unidad</th>
+        <th>Stock</th>
+        <th>Stock mín.</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of filtrados(); track p.id) {
+        <tr [class.stock-bajo]="p.stock <= p.stockMinimo">
+          <td>{{ p.codigo }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.categoria }}</td>
+          <td>{{ p.unidad }}</td>
+          <td>
+            {{ p.stock }}
+            @if (p.stock <= p.stockMinimo) {
+              <span class="alerta">⚠ Stock bajo</span>
+            }
+          </td>
+          <td>{{ p.stockMinimo }}</td>
+          <td>Bs. {{ p.precio }}</td>
+          <td class="acciones">
+            <a [routerLink]="['/productos', p.id]" class="btn btn-sm btn-info">Ver</a>
+            <a [routerLink]="['/productos', p.id, 'editar']" class="btn btn-sm btn-secondary">Editar</a>
+            <button (click)="eliminar(p.id)" class="btn btn-sm btn-danger">Eliminar</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="empty-row">No se encontraron productos.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
