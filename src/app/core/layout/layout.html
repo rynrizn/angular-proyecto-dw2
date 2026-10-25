@@ -1,7 +1,9 @@
-<div class="flex flex-col md:flex-row min-h-screen">
-  <app-sidebar class="md:w-52" />
-  <div class="flex-1 min-w-0">
-    <app-navbar />
-    <router-outlet />
+<div class="flex min-h-screen bg-slate-50">
+  <app-sidebar class="w-64 shrink-0 block" />
+  <div class="flex-1 flex flex-col min-w-0">
+    <app-navbar class="block" />
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+      <router-outlet />
+    </main>
   </div>
 </div>

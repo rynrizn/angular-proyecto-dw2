@@ -1,7 +1,5 @@
-
 import { Routes } from '@angular/router';
 import { Layout } from './core/layout/layout';
-import { Dashboard } from './features/dashboard/pages/dashboard-home/dashboard';
 
 export const routes: Routes = [
   {
@@ -15,48 +13,46 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        component: Dashboard,
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard-home/dashboard').then(
+            (m) => m.Dashboard,
+          ),
+      },
+      {
+        path: 'inventario',
+        loadChildren: () =>
+          import('./features/inventario/inventario.routes').then(
+            (m) => m.INVENTARIO_ROUTES,
+          ),
       },
       {
         path: 'productos',
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./features/inventario/pages/producto-list/producto-list').then(
-                (m) => m.ProductoList,
-              ),
-          },
-          {
-            path: 'nuevo',
-            loadComponent: () =>
-              import('./features/inventario/pages/producto-form/producto-form').then(
-                (m) => m.ProductoForm,
-              ),
-          },
-          {
-            path: ':id/editar',
-            loadComponent: () =>
-              import('./features/inventario/pages/producto-form/producto-form').then(
-                (m) => m.ProductoForm,
-              ),
-          },
-          {
-            path: ':id',
-            loadComponent: () =>
-              import('./features/inventario/pages/producto-detalle/producto-detalle').then(
-                (m) => m.ProductoDetalle,
-              ),
-          },
-        ],
+        loadChildren: () =>
+          import('./features/inventario/inventario.routes').then(
+            (m) => m.INVENTARIO_ROUTES,
+          ),
       },
       {
         path: 'movimientos',
-        loadComponent: () =>
-          import('./features/inventario/pages/movimientos/movimientos').then(
-            (m) => m.Movimientos,
-          ),
+        redirectTo: 'inventario/movimientos',
+        pathMatch: 'full',
       },
+      // Integración Día 4 (descomentar al fusionar ramas correspondientes):
+      // {
+      //   path: 'compras',
+      //   loadChildren: () =>
+      //     import('./features/compras/compras.routes').then((m) => m.COMPRAS_ROUTES),
+      // },
+      // {
+      //   path: 'produccion',
+      //   loadChildren: () =>
+      //     import('./features/produccion/produccion.routes').then((m) => m.PRODUCCION_ROUTES),
+      // },
+      // {
+      //   path: 'reportes',
+      //   loadChildren: () =>
+      //     import('./features/reportes-auth/reportes.routes').then((m) => m.REPORTES_ROUTES),
+      // },
     ],
   },
   {
