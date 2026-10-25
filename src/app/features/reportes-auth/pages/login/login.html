@@ -5,35 +5,44 @@
         <h3 class="text-xl font-semibold text-center">Bienvenido de nuevo</h3>
         <p class="text-sm text-center mb-8"> Ingresa tus credenciales para acceder</p>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <label class="text-sm font-medium block mb-1" for="">Usuario:</label>
-            <input formControlName="nombreUsuario"
-                class="border rounded-md w-full p-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
-                [ngClass]="{'border-slate-600 mb-4': !loginForm.get('nombreUsuario')?.touched, 
-                            'border-red-600 focus:ring-red-400 mb-1': loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched}"
-                type="text" placeholder="Ej: admin">
+            <div class="mb-5">
+                <label class="text-sm font-medium block mb-1" for="">Usuario:</label>
+                <input formControlName="nombreUsuario"
+                    class="border rounded-md w-full p-3 mb-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
+                    [ngClass]="{'border-slate-600 ': !loginForm.get('nombreUsuario')?.touched, 
+                            'border-red-600 focus:ring-red-400': loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched}"
+                    type="text" placeholder="Ej: admin">
 
-            @if(loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched){
-                <div class="text-xs text-red-600 mt-0 mb-4">
+                @if(loginForm.get('nombreUsuario')?.invalid && loginForm.get('nombreUsuario')?.touched){
+                <div class="text-xs text-red-600 mb-1">
                     @if (loginForm.get('nombreUsuario')?.errors?.['required']) {<p>El usuario es obligatorio</p>}
                 </div>
-            }
-
-
-            <label class="text-sm font-medium block mb-1 mt-4" for="">Contraseña:</label>
-            <input formControlName="contraseña"
-                class="border rounded-md w-full p-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
-                [ngClass]="{'border-slate-600': !loginForm.get('contraseña')?.touched, 
-                            'border-red-600 focus:ring-red-400 mb-1': loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched
+                }
+            </div>
+            <div class="mb-7">
+                <label class="text-sm font-medium block mb-1 mt-4" for="">Contraseña:</label>
+                <input formControlName="contraseña"
+                    class="border rounded-md w-full p-3 mb-1  focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-colors"
+                    [ngClass]="{'border-slate-600': !loginForm.get('contraseña')?.touched, 
+                            'border-red-600 focus:ring-red-400': loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched
                 }" type="password" placeholder="******">
-            
-            @if(loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched){
-                <div class="text-xs text-red-600 mt-0">
+
+                @if(loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched){
+                <div class="text-xs text-red-600 mb-1">
                     @if(loginForm.get('contraseña')?.errors?.['required']){<p>La contraseña es obligatorio</p>}
                     @else {<p>El tamaño minimo es de 6 caracteres</p>}
                 </div>
+                }
+            </div>
+            <div>
+            @if(errorLogin() != null){
+            <div class=" flex justify-center p-3 mt-0">
+                <p class="text-sm text-red-600 font-medium">{{errorLogin()}}</p>
+            </div>
             }
             <button
-                class="border border-slate-300 rounded-xl w-full mt-6 bg-slate-500 text-white p-2 hover:bg-indigo-400 transition-colors">Ingresar</button>
-        </form>
+                class="border border-slate-300 rounded-xl w-full bg-slate-500 text-white p-2 hover:bg-indigo-400 transition-colors active:bg-indigo-500" >Ingresar</button>
+            </div>    
+    </form>
     </div>
 </div>
