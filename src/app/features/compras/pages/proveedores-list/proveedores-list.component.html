@@ -66,6 +66,7 @@
   @if (modalAbierto()) {
     <app-proveedor-modal
       [proveedor]="proveedorEnEdicion()"
+      [errorGuardado]="errorModal()"
       (guardado)="guardarProveedor($event)"
       (cancelado)="cerrarModal()"
     />

@@ -18,12 +18,10 @@ function fechaDeHoy(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`;
 }
 
-// Validador propio: la fecha de la compra no puede ser posterior a hoy
 function fechaNoFutura(control: AbstractControl): ValidationErrors | null {
   return control.value > fechaDeHoy() ? { futura: true } : null;
 }
 
-// Redondea a 2 decimales para evitar resultados como 0.30000000000000004
 function redondear(valor: number): number {
   return Math.round(valor * 100) / 100;
 }
@@ -51,18 +49,15 @@ export class NuevaCompraComponent {
     lineas: this.fb.array([this.crearLinea()])
   });
 
-  // Copia de los valores del formulario como señal, para calcular totales en vivo
   private valores = toSignal(
     this.formulario.valueChanges.pipe(map(() => this.formulario.getRawValue())),
     { initialValue: this.formulario.getRawValue() }
   );
 
-  // Subtotal de cada fila = cantidad × precio unitario
   protected subtotales = computed(() =>
     this.valores().lineas.map(linea => redondear((linea.cantidad || 0) * (linea.precioUnitario || 0)))
   );
 
-  // Total de la compra = suma de los subtotales
   protected total = computed(() =>
     redondear(this.subtotales().reduce((suma, subtotal) => suma + subtotal, 0))
   );
@@ -89,13 +84,11 @@ export class NuevaCompraComponent {
     }
   }
 
-  // true si el campo de la cabecera fue tocado y es inválido
   protected cabeceraInvalida(campo: 'proveedorId' | 'fecha'): boolean {
     const control = this.formulario.controls[campo];
     return control.touched && control.invalid;
   }
 
-  // true si el campo de esa fila fue tocado y es inválido
   protected lineaInvalida(indice: number, campo: 'insumoId' | 'cantidad' | 'precioUnitario'): boolean {
     const control = this.lineas.at(indice).controls[campo];
     return control.touched && control.invalid;
