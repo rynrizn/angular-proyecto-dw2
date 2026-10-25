@@ -1,0 +1,144 @@
+<div class="mov-page">
+  <h2 class="page-title">Movimientos de inventario</h2>
+
+  <div class="mov-layout">
+
+    <!-- ===== FORMULARIO ===== -->
+    <aside class="mov-form-panel">
+      <h3 class="panel-title">Registrar movimiento</h3>
+
+      @if (mensaje()) {
+        <div class="alert alert-success">{{ mensaje() }}</div>
+      }
+      @if (mensajeError()) {
+        <div class="alert alert-error">{{ mensajeError() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="registrar()" novalidate class="mov-form">
+
+        <!-- Producto -->
+        <div class="field">
+          <label class="label">Producto *</label>
+          <select
+            class="input"
+            [class.input-error]="(submitted() || f['productoId'].touched) && f['productoId'].errors"
+            formControlName="productoId"
+          >
+            <option [value]="null">Seleccione un producto...</option>
+            @for (p of productos(); track p.id) {
+              <option [value]="p.id">{{ p.codigo }} – {{ p.nombre }} ({{ p.stock }} {{ p.unidad }})</option>
+            }
+          </select>
+          @if ((submitted() || f['productoId'].touched) && f['productoId'].errors?.['required']) {
+            <p class="error-msg">Seleccione un producto.</p>
+          }
+        </div>
+
+        <!-- Tipo -->
+        <div class="field">
+          <label class="label">Tipo *</label>
+          <select
+            class="input"
+            [class.input-error]="(submitted() || f['tipo'].touched) && f['tipo'].errors"
+            formControlName="tipo"
+          >
+            <option value="">Seleccione el tipo...</option>
+            <option value="entrada">↑ Entrada</option>
+            <option value="salida">↓ Salida</option>
+          </select>
+          @if ((submitted() || f['tipo'].touched) && f['tipo'].errors?.['required']) {
+            <p class="error-msg">El tipo es obligatorio.</p>
+          }
+        </div>
+
+        <!-- Cantidad -->
+        <div class="field">
+          <label class="label">
+            Cantidad *
+            @if (form.value.productoId && form.value.tipo === 'salida') {
+              <span class="label-hint">(Disponible: {{ getStockDisponible() }})</span>
+            }
+          </label>
+          <input
+            class="input"
+            [class.input-error]="(submitted() || f['cantidad'].touched) && f['cantidad'].errors"
+            type="number"
+            min="1"
+            formControlName="cantidad"
+            placeholder="0"
+          />
+          @if ((submitted() || f['cantidad'].touched) && f['cantidad'].errors) {
+            <p class="error-msg">La cantidad debe ser mayor que cero.</p>
+          }
+        </div>
+
+        <!-- Motivo -->
+        <div class="field">
+          <label class="label">Motivo / Observación</label>
+          <textarea
+            class="input textarea"
+            formControlName="motivo"
+            rows="2"
+            placeholder="Opcional..."
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+      </form>
+    </aside>
+
+    <!-- ===== HISTORIAL ===== -->
+    <section class="mov-historial-panel">
+      <h3 class="panel-title">Historial de movimientos</h3>
+
+      <!-- Filtros -->
+      <div class="filtros">
+        <select class="input" (change)="cambiarFiltroTipo($event)">
+          <option value="">Todos los tipos</option>
+          <option value="entrada">Solo entradas</option>
+          <option value="salida">Solo salidas</option>
+        </select>
+        <input
+          class="input"
+          type="text"
+          placeholder="Buscar producto..."
+          (input)="cambiarBusqueda($event)"
+        />
+      </div>
+
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Producto</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of movimientosFiltrados(); track m.id) {
+              <tr [class.fila-entrada]="m.tipo === 'entrada'" [class.fila-salida]="m.tipo === 'salida'">
+                <td class="texto-gris">{{ m.fecha }}</td>
+                <td class="texto-bold">{{ getNombreProducto(m.productoId) }}</td>
+                <td>
+                  <span [class]="m.tipo === 'entrada' ? 'chip chip-entrada' : 'chip chip-salida'">
+                    {{ m.tipo === 'entrada' ? '↑ Entrada' : '↓ Salida' }}
+                  </span>
+                </td>
+                <td class="texto-bold">{{ m.cantidad }}</td>
+                <td class="texto-gris">{{ m.motivo || '—' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-row">No hay movimientos registrados.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>

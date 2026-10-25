@@ -1,0 +1,139 @@
+<div class="form-page">
+  <div class="form-card">
+    <h2 class="form-title">
+      {{ editId() ? 'Editar producto' : 'Nuevo producto' }}
+    </h2>
+
+    @if (mensaje()) {
+      <div class="alert alert-success">{{ mensaje() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+
+      <!-- Código -->
+      <div class="field">
+        <label class="label" for="codigo">Código *</label>
+        <input
+          id="codigo"
+          class="input"
+          [class.input-error]="(submitted() || f['codigo'].touched) && f['codigo'].errors"
+          type="text"
+          formControlName="codigo"
+          placeholder="Ej: P-001"
+        />
+        @if ((submitted() || f['codigo'].touched) && f['codigo'].errors?.['required']) {
+          <p class="error-msg">El código es obligatorio.</p>
+        }
+      </div>
+
+      <!-- Nombre -->
+      <div class="field">
+        <label class="label" for="nombre">Nombre *</label>
+        <input
+          id="nombre"
+          class="input"
+          [class.input-error]="(submitted() || f['nombre'].touched) && f['nombre'].errors"
+          type="text"
+          formControlName="nombre"
+          placeholder="Nombre del producto"
+        />
+        @if ((submitted() || f['nombre'].touched) && f['nombre'].errors?.['required']) {
+          <p class="error-msg">El nombre es obligatorio.</p>
+        }
+      </div>
+
+      <!-- Categoría -->
+      <div class="field">
+        <label class="label" for="categoria">Categoría *</label>
+        <input
+          id="categoria"
+          class="input"
+          [class.input-error]="(submitted() || f['categoria'].touched) && f['categoria'].errors"
+          type="text"
+          formControlName="categoria"
+          placeholder="Ej: Insumos, Panadería"
+        />
+        @if ((submitted() || f['categoria'].touched) && f['categoria'].errors?.['required']) {
+          <p class="error-msg">La categoría es obligatoria.</p>
+        }
+      </div>
+
+      <!-- Unidad -->
+      <div class="field">
+        <label class="label" for="unidad">Unidad *</label>
+        <input
+          id="unidad"
+          class="input"
+          [class.input-error]="(submitted() || f['unidad'].touched) && f['unidad'].errors"
+          type="text"
+          formControlName="unidad"
+          placeholder="Ej: kg, litro, unidad"
+        />
+        @if ((submitted() || f['unidad'].touched) && f['unidad'].errors?.['required']) {
+          <p class="error-msg">La unidad es obligatoria.</p>
+        }
+      </div>
+
+      <!-- Stock y Stock mínimo -->
+      <div class="field-row">
+        <div class="field">
+          <label class="label" for="stock">Stock actual *</label>
+          <input
+            id="stock"
+            class="input"
+            [class.input-error]="(submitted() || f['stock'].touched) && f['stock'].errors"
+            type="number"
+            min="0"
+            formControlName="stock"
+          />
+          @if ((submitted() || f['stock'].touched) && f['stock'].errors) {
+            <p class="error-msg">Stock debe ser ≥ 0.</p>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label" for="stockMinimo">Stock mínimo *</label>
+          <input
+            id="stockMinimo"
+            class="input"
+            [class.input-error]="(submitted() || f['stockMinimo'].touched) && f['stockMinimo'].errors"
+            type="number"
+            min="0"
+            formControlName="stockMinimo"
+          />
+          @if ((submitted() || f['stockMinimo'].touched) && f['stockMinimo'].errors) {
+            <p class="error-msg">Stock mínimo debe ser ≥ 0.</p>
+          }
+        </div>
+      </div>
+
+      <!-- Precio -->
+      <div class="field">
+        <label class="label" for="precio">Precio (Bs.) *</label>
+        <input
+          id="precio"
+          class="input"
+          [class.input-error]="(submitted() || f['precio'].touched) && f['precio'].errors"
+          type="number"
+          min="0.01"
+          step="0.01"
+          formControlName="precio"
+        />
+        @if ((submitted() || f['precio'].touched) && f['precio'].errors) {
+          <p class="error-msg">El precio debe ser mayor que cero.</p>
+        }
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          {{ editId() ? 'Actualizar' : 'Guardar' }}
+        </button>
+        <button type="button" class="btn btn-outline" (click)="cancelar()">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
