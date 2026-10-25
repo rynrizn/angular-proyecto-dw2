@@ -1,24 +1,23 @@
 import { Routes } from '@angular/router';
 
 export const INVENTARIO_ROUTES: Routes = [
-  { path: '', redirectTo: 'productos', pathMatch: 'full' },
   {
-    path: 'productos',
+    path: '',
     loadComponent: () =>
       import('./pages/producto-list/producto-list').then((m) => m.ProductoList),
   },
   {
-    path: 'productos/nuevo',
+    path: 'nuevo',
     loadComponent: () =>
       import('./pages/producto-form/producto-form').then((m) => m.ProductoForm),
   },
   {
-    path: 'productos/:id/editar',
+    path: ':id/editar',
     loadComponent: () =>
       import('./pages/producto-form/producto-form').then((m) => m.ProductoForm),
   },
   {
-    path: 'productos/:id',
+    path: ':id',
     loadComponent: () =>
       import('./pages/producto-detalle/producto-detalle').then(
         (m) => m.ProductoDetalle,

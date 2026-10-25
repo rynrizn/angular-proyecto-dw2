@@ -20,10 +20,8 @@ export const routes: Routes = [
       },
       {
         path: 'inventario',
-        loadChildren: () =>
-          import('./features/inventario/inventario.routes').then(
-            (m) => m.INVENTARIO_ROUTES,
-          ),
+        redirectTo: 'productos',
+        pathMatch: 'full',
       },
       {
         path: 'productos',
@@ -34,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'movimientos',
-        redirectTo: 'inventario/movimientos',
+        redirectTo: 'productos/movimientos',
         pathMatch: 'full',
       },
       // Integración Día 4 (descomentar al fusionar ramas correspondientes):
