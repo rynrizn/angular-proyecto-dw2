@@ -1,0 +1,89 @@
+@if (producto(); as p) {
+  <div class="detalle-page">
+
+    <!-- Encabezado -->
+    <div class="detalle-header">
+      <div>
+        <p class="detalle-codigo">{{ p.codigo }}</p>
+        <h2 class="detalle-nombre">{{ p.nombre }}</h2>
+      </div>
+      @if (stockBajo()) {
+        <span class="badge-danger">⚠ Stock bajo</span>
+      } @else {
+        <span class="badge-ok">✔ Stock OK</span>
+      }
+    </div>
+
+    <!-- Datos del producto -->
+    <div class="detalle-grid">
+      <div class="dato-card">
+        <span class="dato-label">Categoría</span>
+        <span class="dato-valor">{{ p.categoria }}</span>
+      </div>
+      <div class="dato-card">
+        <span class="dato-label">Unidad</span>
+        <span class="dato-valor">{{ p.unidad }}</span>
+      </div>
+      <div class="dato-card" [class.dato-card--alerta]="stockBajo()">
+        <span class="dato-label">Stock actual</span>
+        <span class="dato-valor" [class.valor-alerta]="stockBajo()">
+          {{ p.stock }} {{ p.unidad }}
+        </span>
+      </div>
+      <div class="dato-card">
+        <span class="dato-label">Stock mínimo</span>
+        <span class="dato-valor">{{ p.stockMinimo }} {{ p.unidad }}</span>
+      </div>
+      <div class="dato-card">
+        <span class="dato-label">Precio</span>
+        <span class="dato-valor">Bs. {{ p.precio }}</span>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="detalle-acciones">
+      <a routerLink="/productos" class="btn btn-outline">← Volver</a>
+      <a [routerLink]="['/productos', p.id, 'editar']" class="btn btn-secondary">Editar</a>
+      <button class="btn btn-info" (click)="verMovimientos()">Ver movimientos</button>
+    </div>
+
+    <!-- Movimientos recientes -->
+    @if (movimientos().length > 0) {
+      <div class="movimientos-recientes">
+        <h3 class="seccion-titulo">Movimientos de este producto</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of movimientos(); track m.id) {
+              <tr>
+                <td>{{ m.fecha }}</td>
+                <td>
+                  <span [class]="m.tipo === 'entrada' ? 'chip-entrada' : 'chip-salida'">
+                    {{ m.tipo === 'entrada' ? '↑ Entrada' : '↓ Salida' }}
+                  </span>
+                </td>
+                <td>{{ m.cantidad }}</td>
+                <td class="texto-gris">{{ m.motivo || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="sin-movimientos">Sin movimientos registrados para este producto.</p>
+    }
+
+  </div>
+} @else {
+  <div class="not-found">
+    <p class="not-found-msg">⚠ Producto no encontrado.</p>
+    <a routerLink="/productos" class="btn btn-primary">Volver a productos</a>
+  </div>
+}
