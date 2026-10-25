@@ -1,44 +1,66 @@
+
 import { Routes } from '@angular/router';
+import { Layout } from './shared/layout/layout';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'productos', pathMatch: 'full' },
   {
-    path: 'productos',
+    path: '',
+    component: Layout,
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./pages/producto-list/producto-list').then(
-            (m) => m.ProductoList,
-          ),
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
       },
       {
-        path: 'nuevo',
-        loadComponent: () =>
-          import('./pages/producto-form/producto-form').then(
-            (m) => m.ProductoForm,
-          ),
+        path: 'dashboard',
+        component: Dashboard,
       },
       {
-        path: ':id/editar',
-        loadComponent: () =>
-          import('./pages/producto-form/producto-form').then(
-            (m) => m.ProductoForm,
-          ),
+        path: 'productos',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./pages/producto-list/producto-list').then(
+                (m) => m.ProductoList,
+              ),
+          },
+          {
+            path: 'nuevo',
+            loadComponent: () =>
+              import('./pages/producto-form/producto-form').then(
+                (m) => m.ProductoForm,
+              ),
+          },
+          {
+            path: ':id/editar',
+            loadComponent: () =>
+              import('./pages/producto-form/producto-form').then(
+                (m) => m.ProductoForm,
+              ),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./pages/producto-detalle/producto-detalle').then(
+                (m) => m.ProductoDetalle,
+              ),
+          },
+        ],
       },
       {
-        path: ':id',
+        path: 'movimientos',
         loadComponent: () =>
-          import('./pages/producto-detalle/producto-detalle').then(
-            (m) => m.ProductoDetalle,
+          import('./pages/movimientos/movimientos').then(
+            (m) => m.Movimientos,
           ),
       },
     ],
   },
   {
-    path: 'movimientos',
-    loadComponent: () =>
-      import('./pages/movimientos/movimientos').then((m) => m.Movimientos),
+    path: '**',
+    redirectTo: 'dashboard',
   },
-  { path: '**', redirectTo: 'productos' },
 ];
