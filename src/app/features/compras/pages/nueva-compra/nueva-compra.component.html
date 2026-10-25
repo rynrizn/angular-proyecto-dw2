@@ -10,6 +10,9 @@
   @if (mensaje()) {
     <p class="px-4 py-3 rounded-lg bg-green-100 text-green-800">{{ mensaje() }}</p>
   }
+    @if (mensajeError()) {
+    <p class="px-4 py-3 rounded-lg bg-red-100 text-red-800">{{ mensajeError() }}</p>
+  }
 
   <form [formGroup]="formulario" (ngSubmit)="guardar()" class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border border-slate-200 rounded-lg p-4">
@@ -25,8 +28,12 @@
             <option [ngValue]="proveedor.id">{{ proveedor.nombreEmpresa }}</option>
           }
         </select>
-        @if (cabeceraInvalida('proveedorId')) {
-          <p class="text-sm text-red-600 mt-1">Seleccione un proveedor.</p>
+               @if (cabeceraInvalida('fecha')) {
+          @if (formulario.controls.fecha.hasError('futura')) {
+            <p class="text-sm text-red-600 mt-1">La fecha no puede ser futura.</p>
+          } @else {
+            <p class="text-sm text-red-600 mt-1">Seleccione una fecha.</p>
+          }
         }
       </div>
 
@@ -35,6 +42,7 @@
         <input
           id="fecha"
           type="date"
+          [max]="fechaMaxima"
           formControlName="fecha"
           class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         />

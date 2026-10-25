@@ -1,6 +1,10 @@
 import { Component, inject, input, OnInit, output } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CreateProveedorDto, Proveedor } from '../../../../models';
+
+function noVacio(control: AbstractControl): ValidationErrors | null {
+  return String(control.value).trim() === '' ? { required: true } : null;
+}
 
 @Component({
   selector: 'app-proveedor-modal',
@@ -13,12 +17,14 @@ export class ProveedorModalComponent implements OnInit {
 
   proveedor = input<Proveedor | null>(null);
 
+  errorGuardado = input('');
+
   guardado = output<CreateProveedorDto>();
   cancelado = output<void>();
 
   formulario = this.fb.group({
-    nombreEmpresa: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
-    contacto: ['', [Validators.required, Validators.maxLength(100)]],
+    nombreEmpresa: ['', [noVacio, Validators.minLength(3), Validators.maxLength(150)]],
+    contacto: ['', [noVacio, Validators.maxLength(100)]],
     telefono: ['', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]]
   });
 
@@ -33,7 +39,6 @@ export class ProveedorModalComponent implements OnInit {
     }
   }
 
-  // true si el campo fue tocado y tiene ese error
   mostrarError(campo: string, error: string): boolean {
     const control = this.formulario.get(campo);
     return !!control && control.touched && control.hasError(error);
@@ -44,7 +49,12 @@ export class ProveedorModalComponent implements OnInit {
       this.formulario.markAllAsTouched();
       return;
     }
-    this.guardado.emit(this.formulario.getRawValue());
+    const valores = this.formulario.getRawValue();
+    this.guardado.emit({
+      nombreEmpresa: valores.nombreEmpresa.trim(),
+      contacto: valores.contacto.trim(),
+      telefono: valores.telefono
+    });
   }
 
   cancelar(): void {

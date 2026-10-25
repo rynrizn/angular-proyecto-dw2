@@ -1,15 +1,16 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { INSUMOS_TEMPORALES } from '../../data/insumos-temporales';
 import { ComprasService } from '../../services/compras.service';
-import { RouterLink } from '@angular/router';
 
 // TEMPORAL: el usuario real vendrá del AuthService del Integrante 5
 const USUARIO_TEMPORAL_ID = 1;
 
+// Fecha de hoy como "2026-10-24" (formato del campo de fecha)
 function fechaDeHoy(): string {
   const hoy = new Date();
   const mes = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -17,13 +18,19 @@ function fechaDeHoy(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`;
 }
 
+// Validador propio: la fecha de la compra no puede ser posterior a hoy
+function fechaNoFutura(control: AbstractControl): ValidationErrors | null {
+  return control.value > fechaDeHoy() ? { futura: true } : null;
+}
+
+// Redondea a 2 decimales para evitar resultados como 0.30000000000000004
 function redondear(valor: number): number {
   return Math.round(valor * 100) / 100;
 }
 
 @Component({
   selector: 'app-nueva-compra',
-    imports: [ReactiveFormsModule, DecimalPipe, RouterLink],
+  imports: [ReactiveFormsModule, DecimalPipe, RouterLink],
   templateUrl: './nueva-compra.component.html',
   styleUrl: './nueva-compra.component.css'
 })
@@ -35,10 +42,12 @@ export class NuevaCompraComponent {
   protected insumos = INSUMOS_TEMPORALES;
 
   protected mensaje = signal('');
+  protected mensajeError = signal('');
+  protected fechaMaxima = fechaDeHoy();
 
   protected formulario = this.fb.group({
     proveedorId: [0, [Validators.min(1)]],
-    fecha: [fechaDeHoy(), [Validators.required]],
+    fecha: [fechaDeHoy(), [Validators.required, fechaNoFutura]],
     lineas: this.fb.array([this.crearLinea()])
   });
 
@@ -94,30 +103,36 @@ export class NuevaCompraComponent {
 
   protected guardar(): void {
     this.mensaje.set('');
+    this.mensajeError.set('');
 
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
+      this.mensajeError.set('Revise los campos marcados en rojo.');
       return;
     }
 
     const datos = this.formulario.getRawValue();
 
-    const compra = this.comprasService.registrarCompra({
-      usuarioId: USUARIO_TEMPORAL_ID,
-      proveedorId: datos.proveedorId,
-      fecha: new Date(datos.fecha + 'T00:00:00').toISOString(),
-      lineas: datos.lineas.map(linea => ({
-        insumoId: linea.insumoId,
-        cantidad: linea.cantidad,
-        precioUnitario: linea.precioUnitario
-      }))
-    });
+    try {
+      const compra = this.comprasService.registrarCompra({
+        usuarioId: USUARIO_TEMPORAL_ID,
+        proveedorId: datos.proveedorId,
+        fecha: new Date(datos.fecha + 'T00:00:00').toISOString(),
+        lineas: datos.lineas.map(linea => ({
+          insumoId: linea.insumoId,
+          cantidad: linea.cantidad,
+          precioUnitario: linea.precioUnitario
+        }))
+      });
 
-    this.mensaje.set(`Compra #${compra.id} registrada correctamente.`);
-    this.limpiarFormulario();
+      this.mensaje.set(`Compra #${compra.id} registrada correctamente.`);
+      this.limpiarFormulario();
+    } catch (error) {
+      this.mensajeError.set(error instanceof Error ? error.message : 'No se pudo registrar la compra.');
+    }
   }
 
-    private limpiarFormulario(): void {
+  private limpiarFormulario(): void {
     while (this.lineas.length > 1) {
       this.lineas.removeAt(1);
     }

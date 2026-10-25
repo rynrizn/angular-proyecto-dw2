@@ -18,8 +18,8 @@ export class ProveedoresListComponent {
   protected proveedorEnEdicion = signal<Proveedor | null>(null);
 
   protected mensaje = signal('');
+  protected errorModal = signal('');
 
-  // Lista que se muestra: se recalcula sola cuando cambian los proveedores o el texto
   protected proveedoresFiltrados = computed(() => {
     const termino = this.terminoBusqueda().trim().toLowerCase();
     const todos = this.comprasService.proveedores();
@@ -40,11 +40,13 @@ export class ProveedoresListComponent {
   }
 
   protected abrirNuevo(): void {
+    this.errorModal.set('');
     this.proveedorEnEdicion.set(null);
     this.modalAbierto.set(true);
   }
 
   protected abrirEditar(proveedor: Proveedor): void {
+    this.errorModal.set('');
     this.proveedorEnEdicion.set(proveedor);
     this.modalAbierto.set(true);
   }
@@ -56,14 +58,17 @@ export class ProveedoresListComponent {
   protected guardarProveedor(datos: CreateProveedorDto): void {
     const enEdicion = this.proveedorEnEdicion();
 
-    if (enEdicion) {
-      this.comprasService.actualizarProveedor(enEdicion.id, datos);
-      this.mensaje.set('Proveedor actualizado correctamente.');
-    } else {
-      this.comprasService.crearProveedor(datos);
-      this.mensaje.set('Proveedor registrado correctamente.');
+    try {
+      if (enEdicion) {
+        this.comprasService.actualizarProveedor(enEdicion.id, datos);
+        this.mensaje.set('Proveedor actualizado correctamente.');
+      } else {
+        this.comprasService.crearProveedor(datos);
+        this.mensaje.set('Proveedor registrado correctamente.');
+      }
+      this.modalAbierto.set(false);
+    } catch (error) {
+      this.errorModal.set(error instanceof Error ? error.message : 'No se pudo guardar el proveedor.');
     }
-
-    this.modalAbierto.set(false);
   }
 }
