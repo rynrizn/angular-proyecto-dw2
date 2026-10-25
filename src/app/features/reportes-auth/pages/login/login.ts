@@ -38,7 +38,7 @@ export class Login {
     this.authService.login(nombreUsuario, contraseña).subscribe({
         next: (usuario) => {
 
-            this.router.navigate(['/reportes']); 
+            this.router.navigate(['/dashboard']); 
 
         },
         error: (err) => {

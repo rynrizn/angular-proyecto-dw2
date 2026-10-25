@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { API_CONFIG } from '../../../core/config/api.config';
 import { Observable } from 'rxjs';
 import { ApiResponseDto } from '../models/reporte.model';
+import { environment } from '../../../../environments/environment';
 
 @Service()
 export class ReportesServices {
 
     private http = inject(HttpClient);
-    private url = `${API_CONFIG.BASE_URL}/api/Reporte/reportes`;
+    private url = `${environment.apiUrl}/api/Reporte/reportes`;
 
     obtenerReportes(fechaInicio? : string, fechaFin? : string) : Observable<any>{
 

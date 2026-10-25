@@ -1,9 +1,9 @@
 import { inject, Service, signal } from '@angular/core';
 import { AuthResponse} from '../../models';
 import { HttpClient } from '@angular/common/http';
-import { API_CONFIG } from '../config/api.config';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Service()
 export class AuthService {
@@ -35,7 +35,7 @@ export class AuthService {
     usuarioActual = signal<AuthResponse | null>(null);
 
     private http = inject(HttpClient);
-    private url = `${API_CONFIG.BASE_URL}/api/Auth/login`;
+    private url = `${environment.apiUrl}/api/Auth/login`;
     private router = inject(Router);
 
     constructor(){
