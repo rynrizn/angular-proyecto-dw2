@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   selector: 'app-sidebar',
   styleUrl: './sidebar.css',
   templateUrl: './sidebar.html',
@@ -12,7 +12,7 @@ export class Sidebar {
     { nombre: 'Dashboard', ruta: '/dashboard' },
     { nombre: 'Productos', ruta: '/productos' },
     { nombre: 'Inventario', ruta: '/inventario' },
-    { nombre: 'Proveedores', ruta: '/proveedores' },
+    { nombre: 'Proveedores', ruta: '/compras/proveedores' },
     { nombre: 'Compras', ruta: '/compras' },
     { nombre: 'Producción', ruta: '/produccion' },
     { nombre: 'Recetas', ruta: '/recetas' },
