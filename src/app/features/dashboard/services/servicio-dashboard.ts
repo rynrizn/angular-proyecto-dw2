@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { ProductoResumen, OrdenResumen, TarjetaEstadistica } from '../models/dashboard.model';
+import { ProductoResumen, OrdenResumen, TarjetaEstadistica } from '../../../models/dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class ServicioDashboard {

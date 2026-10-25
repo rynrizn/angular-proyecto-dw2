@@ -1,7 +1,7 @@
 
 import { Routes } from '@angular/router';
-import { Layout } from './shared/layout/layout';
-import { Dashboard } from './pages/dashboard/dashboard';
+import { Layout } from './core/layout/layout';
+import { Dashboard } from './features/dashboard/pages/dashboard-home/dashboard';
 
 export const routes: Routes = [
   {
@@ -23,28 +23,28 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-              import('./pages/producto-list/producto-list').then(
+              import('./features/inventario/pages/producto-list/producto-list').then(
                 (m) => m.ProductoList,
               ),
           },
           {
             path: 'nuevo',
             loadComponent: () =>
-              import('./pages/producto-form/producto-form').then(
+              import('./features/inventario/pages/producto-form/producto-form').then(
                 (m) => m.ProductoForm,
               ),
           },
           {
             path: ':id/editar',
             loadComponent: () =>
-              import('./pages/producto-form/producto-form').then(
+              import('./features/inventario/pages/producto-form/producto-form').then(
                 (m) => m.ProductoForm,
               ),
           },
           {
             path: ':id',
             loadComponent: () =>
-              import('./pages/producto-detalle/producto-detalle').then(
+              import('./features/inventario/pages/producto-detalle/producto-detalle').then(
                 (m) => m.ProductoDetalle,
               ),
           },
@@ -53,7 +53,7 @@ export const routes: Routes = [
       {
         path: 'movimientos',
         loadComponent: () =>
-          import('./pages/movimientos/movimientos').then(
+          import('./features/inventario/pages/movimientos/movimientos').then(
             (m) => m.Movimientos,
           ),
       },

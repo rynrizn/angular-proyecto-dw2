@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Insumo, CreateInsumoDto, UpdateInsumoDto } from '../models';
-import { Producto, CreateProducto, UpdateProducto } from '../models';
+import { Insumo, CreateInsumoDto, UpdateInsumoDto } from '../../../models';
+import { Producto, CreateProducto, UpdateProducto } from '../../../models';
 
 @Injectable({ providedIn: 'root' })
 export class InventarioService {

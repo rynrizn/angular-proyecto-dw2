@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { TarjetaEstadistica } from '../../models/dashboard.model';
+import { TarjetaEstadistica } from '../../../models/dashboard.model';
 
 @Component({
   imports: [NgClass],

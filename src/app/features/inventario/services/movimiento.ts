@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Movimiento, CreateMovimiento } from '../models/movimiento.model';
+import { Movimiento, CreateMovimiento } from '../../../models/movimiento.model';
 import { ProductoService } from './producto';
 
 
