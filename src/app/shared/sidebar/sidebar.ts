@@ -12,7 +12,7 @@ export class Sidebar {
     { nombre: 'Dashboard', ruta: '/dashboard' },
     { nombre: 'Productos', ruta: '/productos' },
     { nombre: 'Inventario', ruta: '/inventario' },
-    { nombre: 'Proveedores', ruta: '/proveedores' },
+    { nombre: 'Proveedores', ruta: '/compras/proveedores' },
     { nombre: 'Compras', ruta: '/compras' },
     { nombre: 'Producción', ruta: '/produccion' },
     { nombre: 'Recetas', ruta: '/recetas' },
