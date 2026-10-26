@@ -1,0 +1,54 @@
+<div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col gap-y-6 h-full">
+    <div>
+        <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full" [ngClass]="datos()?.dotColor"></span>
+            {{ datos()?.titulo }}
+        </h2>
+
+
+        <div class="overflow-x-auto mb-1">
+            <table class="w-full text-sm text-left text-slate-600">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50 rounded-lg">
+                    <tr>
+                        @for (col of datos()?.columnas; track col.texto) {
+                        <th class="px-4 py-3" [class.text-right]="col.alignRight" [class.rounded-l-lg]="$first"
+                            [class.rounded-r-lg]="$last">
+                            {{ col.texto }}
+                        </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @if (datos()?.filas && datos()?.filas!.length > 0) {
+                        @for (row of datos()?.filas; track $index) {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            @for (cell of row.celdas; track cell.valor) {
+                            <td class="px-4 py-3" [ngClass]="cell.colorClass || 'text-slate-900 font-medium'"
+                                [class.text-right]="cell.alignRight">
+                                {{ cell.valor }}
+                            </td>
+                            }
+                        </tr>
+                        }
+                    } @else {
+                    <tr>
+                        <td [attr.colspan]="datos()?.columnas?.length"
+                            class="px-4 py-8 text-center text-slate-400 text-sm">
+                            No hay registros.
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    @if (datos()?.grafico) {
+    <div class="relative w-full mb-5 mt-1" [ngClass]="datos()?.grafico?.containerClass">
+        <canvas baseChart [data]="datos()?.grafico?.data" [options]="datos()?.grafico?.options"
+            [type]="datos()?.grafico!.type">
+        </canvas>
+    </div>
+    }
+</div>

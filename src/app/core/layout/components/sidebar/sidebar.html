@@ -1,0 +1,19 @@
+<div class="bg-slate-800 text-white min-h-screen p-4 flex flex-col justify-between">
+  <div>
+    <h2 class="text-xl font-bold mb-4 tracking-tight">Inventario</h2>
+    <ul class="space-y-1">
+      @for (item of menu; track item.ruta) {
+        <li>
+          <a
+            [routerLink]="item.ruta"
+            routerLinkActive="bg-indigo-600 text-white"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="block px-3 py-2 rounded-xl text-sm md:text-base text-slate-200 hover:bg-slate-700 hover:text-white transition-colors"
+          >
+            {{ item.nombre }}
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

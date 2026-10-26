@@ -2,11 +2,16 @@ import { OrdenProduccion } from './orden-produccion.model';
 
 export interface Producto {
   id: number;
+  codigo: string;
   nombre: string;
+  categoria: string;
+  unidad: string;
+  stock: number;
+  stockMinimo: number;
   precio: number;
-  descripcion: string;
+  descripcion?: string;
   ordenesProduccion?: OrdenProduccion[];
 }
 
-export type CreateProductoDto = Omit<Producto, 'id' | 'ordenesProduccion'>;
-export type UpdateProductoDto = Partial<CreateProductoDto>;
+export type CreateProducto = Omit<Producto, 'id'>;
+export type UpdateProducto = Partial<CreateProducto>;
