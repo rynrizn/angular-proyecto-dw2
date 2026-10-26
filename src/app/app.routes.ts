@@ -1,10 +1,17 @@
 import { Routes } from '@angular/router';
 import { Layout } from './core/layout/layout';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
+   {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/reportes-auth/pages/login/login').then((m) => m.Login),
+  },
   {
     path: '',
     component: Layout,
+    canActivate: [authGuard], // Protege el layout y todas sus rutas hijas
     children: [
       {
         path: '',
@@ -48,11 +55,11 @@ export const routes: Routes = [
       //   loadChildren: () =>
       //     import('./features/produccion/produccion.routes').then((m) => m.PRODUCCION_ROUTES),
       // },
-      // {
-      //   path: 'reportes',
-      //   loadChildren: () =>
-      //     import('./features/reportes-auth/reportes.routes').then((m) => m.REPORTES_ROUTES),
-      // },
+       {
+         path: 'reportes',
+         loadChildren: () =>
+           import('./features/reportes-auth/reportes.route').then((m) => m.REPORTES_ROUTE),
+       },
     ],
   },
   {
