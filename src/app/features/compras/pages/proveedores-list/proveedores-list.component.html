@@ -1,0 +1,75 @@
+<section class="space-y-6">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Proveedores</h1>
+      <p class="text-slate-500">Directorio de empresas que abastecen insumos.</p>
+            <p class="text-sm text-amber-700">Datos locales de demostración: el servidor todavía no tiene API de proveedores.</p>
+    </div>
+    <button
+      type="button"
+      (click)="abrirNuevo()"
+      class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+    >
+      + Nuevo proveedor
+    </button>
+  </div>
+
+  @if (mensaje()) {
+    <p class="px-4 py-3 rounded-lg bg-green-100 text-green-800">{{ mensaje() }}</p>
+  }
+
+  <input
+    #buscador
+    id="buscador-proveedores"
+    type="text"
+    placeholder="Buscar por empresa, contacto o teléfono"
+    (input)="buscar(buscador.value)"
+    class="w-full max-w-md px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+  />
+
+  @if (proveedoresFiltrados().length > 0) {
+    <div class="overflow-x-auto bg-white border border-slate-200 rounded-lg">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-100 text-slate-600">
+          <tr>
+            <th class="px-4 py-3 font-semibold">ID</th>
+            <th class="px-4 py-3 font-semibold">Razón social</th>
+            <th class="px-4 py-3 font-semibold">Contacto</th>
+            <th class="px-4 py-3 font-semibold">Teléfono</th>
+            <th class="px-4 py-3 font-semibold">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (proveedor of proveedoresFiltrados(); track proveedor.id) {
+            <tr class="border-t border-slate-200 text-slate-800">
+              <td class="px-4 py-3">{{ proveedor.id }}</td>
+              <td class="px-4 py-3 font-medium">{{ proveedor.nombreEmpresa }}</td>
+              <td class="px-4 py-3">{{ proveedor.contacto }}</td>
+              <td class="px-4 py-3">{{ proveedor.telefono }}</td>
+              <td class="px-4 py-3">
+                <button
+                  type="button"
+                  (click)="abrirEditar(proveedor)"
+                  class="text-indigo-600 hover:underline"
+                >
+                  Editar
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p class="text-slate-500">No se encontraron proveedores con ese criterio.</p>
+  }
+
+  @if (modalAbierto()) {
+    <app-proveedor-modal
+      [proveedor]="proveedorEnEdicion()"
+      [errorGuardado]="errorModal()"
+      (guardado)="guardarProveedor($event)"
+      (cancelado)="cerrarModal()"
+    />
+  }
+</section>
