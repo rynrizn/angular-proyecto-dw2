@@ -3,7 +3,7 @@
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
     <div>
       <h1 class="text-2xl font-bold text-slate-800">Órdenes de Producción</h1>
-      <p class="text-sm text-slate-500 mt-1">Monitorea y gestiona los lotes de fabricación de muebles en taller.</p>
+      <p class="text-sm text-slate-500 mt-1">Monitorea y gestiona los lotes de fabricación en taller.</p>
     </div>
     <div class="flex flex-wrap gap-2">
       <a routerLink="/produccion/recetas" class="inline-flex items-center px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-lg transition">
@@ -72,20 +72,24 @@
                 {{ produccionService.obtenerProductoPorId(ord.productoId)?.nombre || 'Producto #' + ord.productoId }}
               </td>
               <td class="py-3.5 px-4 text-center font-bold text-slate-700">{{ ord.cantidadSolicitada }} un.</td>
-              <td class="py-3.5 px-4 text-slate-500">{{ ord.fecha }}</td>
+              <td class="py-3.5 px-4 text-slate-500">{{ ord.fecha.toString().substring(0, 10) }}</td>
               <td class="py-3.5 px-4">
-                @if (ord.estado === 'Pendiente') {
-                  <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
+                @if (ord.estado === 'Pendiente' || ord.estado === 'Procesada') {
+                  <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                    {{ ord.estado }}
+                  </span>
                 } @else if (ord.estado === 'En Proceso') {
                   <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">En Proceso</span>
                 } @else if (ord.estado === 'Completado') {
                   <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Completada</span>
                 } @else if (ord.estado === 'Cancelado') {
                   <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">Cancelada</span>
+                } @else {
+                  <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-300">{{ ord.estado }}</span>
                 }
               </td>
               <td class="py-3.5 px-4 text-right space-x-1">
-                @if (ord.estado === 'Pendiente') {
+                @if (ord.estado === 'Pendiente' || ord.estado === 'Procesada') {
                   <button
                     type="button"
                     (click)="cambiarEstado(ord.id, 'En Proceso')"

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProduccionService } from '../../services/produccion.service';
@@ -10,19 +10,24 @@ import { ProduccionService } from '../../services/produccion.service';
   templateUrl: './mermas-list.html',
   styleUrl: './mermas-list.css',
 })
-export class MermasList {
+export class MermasList implements OnInit {
   produccionService = inject(ProduccionService);
 
-  ordenProduccionId = signal<number>(101);
+  ordenProduccionId = signal<number>(1);
   insumoId = signal<number>(1);
   cantidadPerdida = signal<number>(1);
   motivo = signal<string>('');
 
-  // registrar merma y descontar inventario
-  registrar() : void {
+  // cargar historial de mermas e insumos al montar el componente
+  ngOnInit(): void {
+    this.produccionService.cargarDatos();
+  }
+
+  // registrar merma y descontar materia prima
+  async registrar(): Promise<void> {
     if (this.cantidadPerdida() <= 0 || !this.motivo().trim()) return;
 
-    this.produccionService.registrarMerma({
+    await this.produccionService.registrarMerma({
       insumoId: Number(this.insumoId()),
       ordenProduccionId: Number(this.ordenProduccionId()),
       cantidadPerdida: Number(this.cantidadPerdida()),

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ProduccionService } from '../../services/produccion.service';
@@ -10,12 +10,19 @@ import { ProduccionService } from '../../services/produccion.service';
   templateUrl: './nueva-orden.html',
   styleUrl: './nueva-orden.css',
 })
-export class NuevaOrden {
+export class NuevaOrden implements OnInit {
   produccionService = inject(ProduccionService);
   private router = inject(Router);
 
   productoSeleccionadoId = signal<number>(1);
   cantidad = signal<number>(5);
+  guardando = signal<boolean>(false);
+  mensajeAlerta = signal<string>('');
+
+  // cargar datos iniciales si no se han cargado aun
+  ngOnInit(): void {
+    this.produccionService.cargarDatos();
+  }
 
   // receta del producto elegido
   recetaActual = computed(() =>
@@ -51,17 +58,23 @@ export class NuevaOrden {
     return reqs.length > 0 && reqs.every((r) => r.suficiente) && this.cantidad() > 0;
   });
 
-  // guardar orden nueva
-  guardarOrden() : void {
-    if (!this.puedeFabricar()) return;
+  // guardar orden nueva conectando al backend api
+  async guardarOrden(): Promise<void> {
+    if (!this.puedeFabricar() || this.guardando()) return;
 
-    this.produccionService.crearOrden({
-      usuarioId: 1,
-      productoId: Number(this.productoSeleccionadoId()),
-      cantidadSolicitada: this.cantidad(),
-      fecha: new Date().toISOString().split('T')[0],
-      estado: 'Pendiente',
-    });
+    this.guardando.set(true);
+    this.mensajeAlerta.set('');
+
+    const res = await this.produccionService.crearOrden(
+      Number(this.productoSeleccionadoId()),
+      Number(this.cantidad())
+    );
+
+    this.guardando.set(false);
+
+    if (res.alertas && res.alertas.length > 0) {
+      alert(`Orden registrada con alertas:\n${res.alertas.join('\n')}`);
+    }
 
     this.router.navigate(['/produccion/ordenes']);
   }
