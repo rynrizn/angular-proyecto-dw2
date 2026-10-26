@@ -12,5 +12,5 @@
 // ---------------------------------------------------------------------------
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api', // ← Reemplazar con la URL real del backend
+  apiUrl: 'http://localhost:5175',
 };

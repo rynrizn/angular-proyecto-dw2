@@ -1,0 +1,60 @@
+<div class="min-h-screen p-6 md:p-8 bg-slate-50">
+
+  <div class="mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">Panel de reportes</h1>
+    <p class="text-sm text-slate-500 mt-3"> Visualiza el rendimiento, consumo de materias primas y balance general
+      del sistema</p>
+  </div>
+  <form [formGroup]="filtroForm" (ngSubmit)="generarReporte()">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
+      <div class="flex flex-col md:flex-row items-end gap-4">
+
+        <!-- Campo Fecha Desde -->
+        <div class="w-full md:w-auto md:flex-1">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Desde:</label>
+          <input type="date" formControlName="fechaInicio"
+            class="w-full border border-slate-300 rounded-lg p-2 text-sm text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 transition-colors">
+        </div>
+
+        <!-- Campo Fecha Hasta -->
+        <div class="w-full md:w-auto md:flex-1">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Hasta:</label>
+          <input type="date" formControlName="fechaFin"
+            class="w-full border border-slate-300 rounded-lg p-2 text-sm text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 transition-colors">
+        </div>
+
+        <!-- Botón de Acción -->
+        <button
+          class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-colors shadow-sm">
+          Generar Reporte
+        </button>
+
+      </div>
+    </div>
+  </form>
+
+  @if (errorFechas()) {
+  <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium">
+    {{ errorFechas() }}
+  </div>
+  }
+
+  @if (error() != null) {
+  <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium">
+    {{ error() }}
+  </div>
+  }
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- TABLA 1: Consumo de Insumos (Tabla + Espacio para Gráfico de Barras Horizontales) -->
+    <app-tarjeta-reporte-component [datos]="insumosTarjeta()"></app-tarjeta-reporte-component>
+
+
+    <!-- TABLA 2: Balance de Producción (Tabla + Espacio para Gráfico de Dona Lado a Lado) -->
+    <app-tarjeta-reporte-component [datos]="produccionTarjeta()"></app-tarjeta-reporte-component>
+
+    <!-- TABLA 3: Resumen de Mermas (Ocupa las 2 columnas del Grid en pantallas grandes) -->
+    <app-tarjeta-reporte-component [datos]="mermasTarjeta()" class="lg:col-span-2"></app-tarjeta-reporte-component>
+
+  </div>
+</div>
