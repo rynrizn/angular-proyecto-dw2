@@ -1,7 +1,6 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { INSUMOS_TEMPORALES } from '../../data/insumos-temporales';
 import { ComprasService } from '../../services/compras.service';
 
 @Component({
@@ -10,41 +9,38 @@ import { ComprasService } from '../../services/compras.service';
   templateUrl: './compras-list.component.html',
   styleUrl: './compras-list.component.css'
 })
-export class ComprasListComponent {
+export class ComprasListComponent implements OnInit {
   private comprasService = inject(ComprasService);
 
-  protected proveedores = this.comprasService.proveedores;
+  protected insumos = this.comprasService.insumos;
+  protected cargando = this.comprasService.cargando;
+  protected errorCarga = this.comprasService.errorCarga;
 
-  protected filtroProveedorId = signal(0);
+  protected filtroInsumoId = signal(0);
 
-  protected compraAbiertaId = signal<number | null>(null);
-
-  // Filas de la tabla: compras filtradas, de la más reciente a la más antigua
-  protected filas = computed(() => {
-    const filtro = this.filtroProveedorId();
-
-    return this.comprasService
-      .compras()
-      .filter(compra => filtro === 0 || compra.proveedorId === filtro)
-      .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id - a.id)
+  protected filas = computed(() =>
+    [...this.comprasService.compras()]
+      .sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || b.id - a.id)
       .map(compra => ({
         compra: compra,
         proveedor: this.comprasService.nombreProveedor(compra.proveedorId),
-        total: this.comprasService.totalDe(compra)
-      }));
-  });
+        insumo: this.comprasService.nombreInsumo(compra.insumoId),
+        total: Math.round(compra.cantidad * compra.precioUnitario * 100) / 100
+      }))
+  );
 
-  protected filtrarPorProveedor(valor: string): void {
-    this.filtroProveedorId.set(Number(valor));
-    this.compraAbiertaId.set(null);
+  ngOnInit(): void {
+    // Pide al backend las compras y los insumos
+    this.comprasService.cargarDatos(this.filtroInsumoId());
   }
 
-  protected alternarDetalle(id: number): void {
-    this.compraAbiertaId.set(this.compraAbiertaId() === id ? null : id);
+  // Usa GET /api/compras/por-insumo cuando se elige un insumo
+  protected filtrarPorInsumo(valor: string): void {
+    this.filtroInsumoId.set(Number(valor));
+    this.comprasService.cargarDatos(this.filtroInsumoId());
   }
 
-  // TEMPORAL: reemplazar por el InventarioService del Integrante 2
-  protected nombreInsumo(id: number): string {
-    return INSUMOS_TEMPORALES.find(insumo => insumo.id === id)?.nombre ?? 'Insumo #' + id;
+  protected recargar(): void {
+    this.comprasService.cargarDatos(this.filtroInsumoId());
   }
 }
