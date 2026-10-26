@@ -1,0 +1,117 @@
+<div class="space-y-6">
+  <!-- cabecera de mermas -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Control de Mermas y Desperdicios</h1>
+      <p class="text-sm text-slate-500 mt-1">Registra perdidas de materia prima en taller para descontarlas automaticamente del inventario.</p>
+    </div>
+    <a routerLink="/produccion/ordenes" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">
+      &larr; Volver a Ordenes
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- formulario de registro de merma -->
+    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit space-y-4">
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Reportar Nueva Merma</h2>
+
+      <!-- selector de orden -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Orden de Fabricacion</label>
+        <select
+          [ngModel]="ordenProduccionId()"
+          (ngModelChange)="ordenProduccionId.set($event)"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500">
+          @for (ord of produccionService.ordenes(); track ord.id) {
+            <option [value]="ord.id">
+              #ORD-{{ ord.id }} ({{ produccionService.obtenerProductoPorId(ord.productoId)?.nombre }})
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- selector de insumo -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Insumo Afectado</label>
+        <select
+          [ngModel]="insumoId()"
+          (ngModelChange)="insumoId.set($event)"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500">
+          @for (ins of produccionService.insumos(); track ins.id) {
+            <option [value]="ins.id">
+              {{ ins.nombre }} (Stock: {{ ins.stockActual }} {{ ins.unidadMedida }})
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- cantidad perdida -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Cantidad Perdida</label>
+        <input
+          type="number"
+          min="0.1"
+          step="0.1"
+          [ngModel]="cantidadPerdida()"
+          (ngModelChange)="cantidadPerdida.set($event)"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <!-- motivo o causa -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Motivo / Causa</label>
+        <textarea
+          rows="3"
+          [ngModel]="motivo()"
+          (ngModelChange)="motivo.set($event)"
+          placeholder="Ej: Corte defectuoso en sierra, rotura de madera, derrame..."
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"></textarea>
+      </div>
+
+      <!-- boton de registro -->
+      <button
+        type="button"
+        (click)="registrar()"
+        [disabled]="cantidadPerdida() <= 0 || !motivo().trim()"
+        class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-medium text-sm rounded-lg transition shadow-sm cursor-pointer">
+        Asentar Merma en Stock
+      </button>
+    </div>
+
+    <!-- tabla historica de mermas -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-semibold border-b border-slate-200">
+            <tr>
+              <th class="py-3 px-4">N° Orden</th>
+              <th class="py-3 px-4">Insumo</th>
+              <th class="py-3 px-4 text-center">Cantidad Perdida</th>
+              <th class="py-3 px-4">Motivo</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (m of produccionService.mermas(); track m.id) {
+              <tr class="hover:bg-slate-50/80 transition">
+                <td class="py-3.5 px-4 font-mono font-bold text-indigo-600">#ORD-{{ m.ordenProduccionId }}</td>
+                <td class="py-3.5 px-4 font-semibold text-slate-800">
+                  {{ produccionService.obtenerInsumoPorId(m.insumoId)?.nombre || 'Insumo #' + m.insumoId }}
+                </td>
+                <td class="py-3.5 px-4 text-center font-bold text-rose-600">
+                  -{{ m.cantidadPerdida }} {{ produccionService.obtenerInsumoPorId(m.insumoId)?.unidadMedida || '' }}
+                </td>
+                <td class="py-3.5 px-4 text-slate-600 text-xs">{{ m.motivo }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="py-8 text-center text-slate-400 text-sm">
+                  No hay mermas registradas.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

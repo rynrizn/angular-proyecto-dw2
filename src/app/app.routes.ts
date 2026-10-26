@@ -35,22 +35,18 @@ export const routes: Routes = [
         redirectTo: 'productos/movimientos',
         pathMatch: 'full',
       },
-      // Integración Día 4 (descomentar al fusionar ramas correspondientes):
-      // {
-      //   path: 'compras',
-      //   loadChildren: () =>
-      //     import('./features/compras/compras.routes').then((m) => m.COMPRAS_ROUTES),
-      // },
-      // {
-      //   path: 'produccion',
-      //   loadChildren: () =>
-      //     import('./features/produccion/produccion.routes').then((m) => m.PRODUCCION_ROUTES),
-      // },
-      // {
-      //   path: 'reportes',
-      //   loadChildren: () =>
-      //     import('./features/reportes-auth/reportes.routes').then((m) => m.REPORTES_ROUTES),
-      // },
+      {
+        path: 'produccion',
+        loadChildren: () =>
+          import('./features/produccion/produccion.routes').then(
+            (m) => m.PRODUCCION_ROUTES,
+          ),
+      },
+      {
+        path: 'recetas',
+        redirectTo: 'produccion/recetas',
+        pathMatch: 'full',
+      },
     ],
   },
   {
