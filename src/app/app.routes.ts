@@ -37,11 +37,19 @@ export const routes: Routes = [
             (m) => m.INVENTARIO_ROUTES,
           ),
       },
+      
       {
         path: 'movimientos',
         redirectTo: 'productos/movimientos',
         pathMatch: 'full',
       },
+        {
+  path: 'compras',
+  loadChildren: () =>
+    import('./features/compras/compras.routes').then(
+      (m) => m.COMPRAS_ROUTES,
+    ),
+},
       {
         path: 'produccion',
         loadChildren: () =>
