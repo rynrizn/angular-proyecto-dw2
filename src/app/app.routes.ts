@@ -5,8 +5,7 @@ import { authGuard } from './core/guards/auth-guard';
 export const routes: Routes = [
   {
     path: 'login',
-    loadComponent: () =>
-      import('./features/reportes-auth/pages/login/login').then((m) => m.Login),
+    loadComponent: () => import('./features/reportes-auth/pages/login/login').then((m) => m.Login),
   },
   {
     path: '',
@@ -21,41 +20,28 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/dashboard/pages/dashboard-home/dashboard').then(
-            (m) => m.Dashboard,
-          ),
-      },
-      {
-        path: 'inventario',
-        redirectTo: 'productos',
-        pathMatch: 'full',
+          import('./features/dashboard/pages/dashboard-home/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'productos',
         loadChildren: () =>
-          import('./features/inventario/inventario.routes').then(
-            (m) => m.INVENTARIO_ROUTES,
-          ),
+          import('./features/inventario/inventario.routes').then((m) => m.INVENTARIO_ROUTES),
       },
-      
+
       {
         path: 'movimientos',
         redirectTo: 'productos/movimientos',
         pathMatch: 'full',
       },
-        {
-  path: 'compras',
-  loadChildren: () =>
-    import('./features/compras/compras.routes').then(
-      (m) => m.COMPRAS_ROUTES,
-    ),
-},
+      {
+        path: 'compras',
+        loadChildren: () =>
+          import('./features/compras/compras.routes').then((m) => m.COMPRAS_ROUTES),
+      },
       {
         path: 'produccion',
         loadChildren: () =>
-          import('./features/produccion/produccion.routes').then(
-            (m) => m.PRODUCCION_ROUTES,
-          ),
+          import('./features/produccion/produccion.routes').then((m) => m.PRODUCCION_ROUTES),
       },
       {
         path: 'recetas',
@@ -65,9 +51,7 @@ export const routes: Routes = [
       {
         path: 'reportes',
         loadChildren: () =>
-          import('./features/reportes-auth/reportes.route').then(
-            (m) => m.REPORTES_ROUTE,
-          ),
+          import('./features/reportes-auth/reportes.route').then((m) => m.REPORTES_ROUTE),
       },
     ],
   },
