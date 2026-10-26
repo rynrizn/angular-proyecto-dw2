@@ -3,7 +3,7 @@ import { Layout } from './core/layout/layout';
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-   {
+  {
     path: 'login',
     loadComponent: () =>
       import('./features/reportes-auth/pages/login/login').then((m) => m.Login),
@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
-    canActivate: [authGuard], // Protege el layout y todas sus rutas hijas
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -27,10 +27,8 @@ export const routes: Routes = [
       },
       {
         path: 'inventario',
-        loadChildren: () =>
-          import('./features/inventario/inventario.routes').then(
-            (m) => m.INVENTARIO_ROUTES,
-          ),
+        redirectTo: 'productos',
+        pathMatch: 'full',
       },
       {
         path: 'productos',
@@ -41,25 +39,28 @@ export const routes: Routes = [
       },
       {
         path: 'movimientos',
-        redirectTo: 'inventario/movimientos',
+        redirectTo: 'productos/movimientos',
         pathMatch: 'full',
       },
-      // Integración Día 4 (descomentar al fusionar ramas correspondientes):
-      // {
-      //   path: 'compras',
-      //   loadChildren: () =>
-      //     import('./features/compras/compras.routes').then((m) => m.COMPRAS_ROUTES),
-      // },
-      // {
-      //   path: 'produccion',
-      //   loadChildren: () =>
-      //     import('./features/produccion/produccion.routes').then((m) => m.PRODUCCION_ROUTES),
-      // },
-       {
-         path: 'reportes',
-         loadChildren: () =>
-           import('./features/reportes-auth/reportes.route').then((m) => m.REPORTES_ROUTE),
-       },
+      {
+        path: 'produccion',
+        loadChildren: () =>
+          import('./features/produccion/produccion.routes').then(
+            (m) => m.PRODUCCION_ROUTES,
+          ),
+      },
+      {
+        path: 'recetas',
+        redirectTo: 'produccion/recetas',
+        pathMatch: 'full',
+      },
+      {
+        path: 'reportes',
+        loadChildren: () =>
+          import('./features/reportes-auth/reportes.route').then(
+            (m) => m.REPORTES_ROUTE,
+          ),
+      },
     ],
   },
   {
